@@ -2,13 +2,27 @@ import sqlite3
 import json
 import re
 
+"""
+The entire purpose of this file is to read the reddit data and compile it to a series of databases with respect to the reddit data's year. 
+We add each row of the reddit data given the pass certain parameters (no hyperlinks, certain length etc... ). Once this data has been validated its then checked if it is
+possibly a reply to another comment. If so it links to two. However, we cannot simply only include linked or paired data in the database, since original comments or new topics
+won't always have replies to their topics. Therefore, there will be a lot of data with no replies. 
+
+The database is effectively a first filter for the data and acts as a buffer. 
+It linking data together to then be formally connected together in training_data/get_training_data.py
+
+"""
+
 class DataBase:
 
-    def __init__(self, db_name):
+    def __init__(self, db_path):
         self.queries = []
         self.row_counter = 0
-        self.db_connection = sqlite3.connect(db_name)
+        self.db_connection = sqlite3.connect(db_path)
         self.db = self.db_connection.cursor() 
+        self.failed_queries = 0
+        self.rows_added = 0
+        self.paired_data = 0
 
     def initiate_table(self):
         self.db.execute("""CREATE TABLE IF NOT EXISTS conversations (original_comment_id TEXT PRIMARY KEY, reply_comment_id TEXT UNIQUE, original_comment_text TEXT,
@@ -16,7 +30,7 @@ class DataBase:
 
     def find_upvotes(self, pid):
         try: 
-            query = f"SELECT upvotes FROM conversations WHERE original_comment_id = '{pid}' LIMIT 1"
+            query = f'SELECT upvotes FROM conversations WHERE original_comment_id = {pid} LIMIT 1'
             self.db.execute(query)
             row = self.db.fetchone()
             return row[0] if row else False
@@ -26,7 +40,7 @@ class DataBase:
     def find_status(self, limit):
         self.row_counter += 1
         if (self.row_counter % limit == 0):
-            print(f"{self.row_counter}")
+            print(f"########\nRows parsed: {self.row_counter}\nRows added: {self.rows_added}\nPaired data: {self.paired_data}\nQueries failed: {self.failed_queries}\n########\n\n")
 
     def add_query(self, query):
         self.queries.append(query)
@@ -35,27 +49,28 @@ class DataBase:
             for query in self.queries:
                 try:
                     self.db.execute(query)
+                    self.rows_added += 1
                 except:
-                    pass
+                    self.failed_queries += 1
             self.db_connection.commit()
             self.queries = []
 
     def find_original_comment(self, comment_id): 
         try: # Finding links between comments
-            query = f"SELECT reply_text FROM conversations WHERE reply_comment_id = '{comment_id}' LIMIT 1"
+            query = f'SELECT reply_text FROM conversations WHERE reply_comment_id = "{comment_id}" LIMIT 1'
             self.db.execute(query)
             row = self.db.fetchone()
             return (row[0] if row else False)
-
         except:
             return False
 
     def insert_into_database(self, comment_id, original_id, reply, subreddit, created_utc, upvotes, original_comment):
         try:
             if (original_comment):
-                query = f"INSERT INTO conversations VALUES('{original_id}', '{comment_id}', '{original_comment}', '{reply}', '{subreddit}', '{created_utc}', {upvotes});"
+                query = f'INSERT INTO conversations VALUES("{original_id}", "{comment_id}", "{original_comment}", "{reply}", "{subreddit}", {created_utc}, {upvotes});'
+                self.paired_data += 1
             else:
-                query = f"INSERT INTO conversations (original_comment_id, reply_comment_id, reply_text, subreddit, unix_time, upvotes) VALUES ('{original_id}', '{comment_id}', '{reply}', '{subreddit}', '{created_utc}', {upvotes});"
+                query = f'INSERT INTO conversations (original_comment_id, reply_comment_id, reply_text, subreddit, unix_time, upvotes) VALUES ("{original_id}", "{comment_id}", "{reply}", "{subreddit}", {created_utc}, {upvotes});'
             self.add_query(query)
 
         except Exception as e:
@@ -63,14 +78,14 @@ class DataBase:
 
     def replace_row(self, comment_id, original_id, reply, subreddit, created_utc, upvotes, original_comment):
         try:
-            query = f"UPDATE conversations SET original_comment_id = {original_id}, reply_comment_id = {comment_id}, original_comment_text = {original_comment}, reply_text = {reply}, subreddit = {subreddit}, unix_time = {created_utc}, upvotes = {upvotes} WHERE original_comment_id = {original_id};"
+            query = f'UPDATE conversations SET original_comment_id = "{original_id}", reply_comment_id = "{comment_id}", original_comment_text = "{original_comment}", reply_text = "{reply}", subreddit = "{subreddit}", unix_time = {created_utc}, upvotes = {upvotes} WHERE original_comment_id = "{original_id}";'
             self.add_query(query)
         except Exception as e:
             print(e)
 
     @staticmethod
     def format_data(data):
-        return(data.replace("\n", " newline ").replace("/r", " reddit").replace('"', "'")) # Removing unessecary text to stop it from messing with the database
+        return(data.replace("\n", " ").replace("/r", " reddit").replace("'", "''").replace('"', "''")) # Removing unessecary text to stop it from messing with the database
 
     @staticmethod
     def filter_comment(comment):  # Probably want to add filtration to certain sub-reddits. 
@@ -88,7 +103,7 @@ class DataBase:
 for file_index in range(1, 3): # range(1, 3) since there are two files used right now: 2015-0{1} and 2015-0{2}
     file_name = f"2015-0{file_index}"
     year = file_name.split("-")[0]
-    database = DataBase(f"{file_name}.db")
+    database = DataBase(f"database/{file_name}.db")
     database.initiate_table()
     print(f"##############\nWorking on database {file_name}\n##############")
     with open(f"D:/Data/reddit_data/{year}/RC_{file_name}", buffering=1500) as f:
@@ -112,4 +127,4 @@ for file_index in range(1, 3): # range(1, 3) since there are two files used righ
                     else:
                         database.insert_into_database(comment_id, original_id, text, subreddit, date_created, upvotes, original_comment)
 
-            database.find_status(150000)
+            database.find_status(100000)
