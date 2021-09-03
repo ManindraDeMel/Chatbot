@@ -35,7 +35,7 @@ def get_reply(sentence, beam_width=10) -> tuple:
 
 
 
-def reply(sentence, dont_show_all_responses = True) -> None: # This functions wraps all the processing for the chatbot's reply and passes the user input
+def reply(sentence, dont_show_all_responses = True, show_score = False) -> None: # This functions wraps all the processing for the chatbot's reply and passes the user input
     response = get_reply(sentence)
     if response:
         result, beam_scores = response
@@ -48,15 +48,18 @@ def reply(sentence, dont_show_all_responses = True) -> None: # This functions wr
                 for i in range(len(output)):
                     if beam_score[i] > max_score[1]:
                         max_score = (i, beam_score[i])
-            print(f'Kali: {output[max_score[0]]}, score: {beam_score[max_score[0]]}\n')
+            if show_score:
+                return (f'Kali: {output[max_score[0]]}, score: {beam_score[max_score[0]]}\n')
+            return (f'Kali: {output[max_score[0]]}\n')
         else:
             for beam, score in zip(result, beam_scores):
                 output = reply_data_list.sequences_to_texts(beam)
                 output = [a[:a.index('<end>')] for a in output]
-                beam_score = [a.sum() for a in score]
+                beam_score = [a.sum() for a in score]                
                 for i in range(len(output)):
                     print(f'({i+1}) Kali: {output[i]}, score: {beam_score[i]}\n')
+                    return "[DEBUG] Check console"
     else:
-        print("The chatbot does not know a word in the given sentence and thus cannot respond. :(\n") # I tokenize by words rather than characters to give my chatbot more context.
+        return "The chatbot does not know a word in the given sentence and thus cannot respond. :(\n" # I tokenize by words rather than characters to give my chatbot more context.
         # However, a downfall to this is that the chatbot cannot respond to words it's never encountered before, its kind of similar to how humans can't respond or 
         # comprehend the words they've never learnt before
