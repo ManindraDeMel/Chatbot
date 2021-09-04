@@ -63,3 +63,6 @@ def reply(sentence, dont_show_all_responses = True, show_score = False) -> None:
         return "The chatbot does not know a word in the given sentence and thus cannot respond. :(\n" # I tokenize by words rather than characters to give my chatbot more context.
         # However, a downfall to this is that the chatbot cannot respond to words it's never encountered before, its kind of similar to how humans can't respond or 
         # comprehend the words they've never learnt before
+        
+def restore_latest_state() -> None:
+    current_state.restore(tf.train.latest_checkpoint(CONST_TRAINING_CHECKPOINT_DIRECTORY)).expect_partial()  # Restoring the latest training parameters

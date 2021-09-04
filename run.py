@@ -60,8 +60,8 @@ class Window:
       self.text.configure(state=DISABLED)
 
       self.text.see(END)
-
-chatbot.current_state.restore(chatbot.tf.train.latest_checkpoint(chatbot.CONST_TRAINING_CHECKPOINT_DIRECTORY)).expect_partial()  # Restoring the latest training parameters
+      
+chatbot.restore_latest_state()
 window = Window(650, 750, ("#FFFFFF", "#5377e6"), "#000000", ("Century Gothic", 14))
 print("Application running...")
 window.window.mainloop()
