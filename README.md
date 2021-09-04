@@ -29,10 +29,10 @@ while True:
     print(chatbot.reply(u"{}".format(user_input)))
 ```
 The conversation will now be displayed in the console similar to the desktop application. Additionally feel free to experiement with extensions or add more functionality to the console application however you like.
+
 ![console example image](https://media.discordapp.net/attachments/715926471159578667/883697980899741697/unknown.png "console example")
 
 Ending the program will just require you to close the console, or if you want, some extra functionality can be added to the given code to exit upon a button press, user input (such as 'exit') or anything similar
-
 
 ### Training the Chatbot
 Training the chatbot, is provided with the train.py file found in the user directory. In the console debugging logs will appear similar to:
