@@ -7,7 +7,7 @@ https://kalichatbotblog.000webhostapp.com/
 - pandas
 - sklearn
 - [Cuda](https://www.youtube.com/watch?v=cL05xtTocmY) (Recommended but optional)
-- 
+
 # Understanding the concepts behind the Chatbot
 This deep leanring chatbot utilizes Neural Machine translation (NMT), Long-short term memory units which make up the network and the addition of the attention layer to pick out important words in a given sentence. The model first encodes the input into comprehensible numerical values for the network, once passed through the network it is then passed to the attention layer and finally to the decoder which returns the chatbot's english reply. 
 
