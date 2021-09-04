@@ -41,8 +41,26 @@ Training the chatbot, is provided with the train.py file found in the user direc
 
 The loss represents the accuracy of the network, whilst the epochs and batches represent the different portions of the data the chatbot is being trained on. 
 
+# Chatbot parameters 
+Located in chatbot.py several adjustable parameters can be found. Notably: 
+```python
+CONST_TRAINING_CHECKPOINT_DIRECTORY = "training_checkpoints/"
+CONST_TRAINING_FILES_DIRECTORIES = ("training_data/training_data.original", "training_data/training_data.reply")
+```
+Where the checkpoint directory is where you want the chatbot to save it's state in the training process and the training files directory is the directory that contain the .original and .reply files for training.
+
+Futhermore parameters for the training process itself include:
+```python
+CONST_BUFFER_SIZE = 32000 
+# limits how much we read from the IO/Stream. We wouldn't want a buffer overflow...
+CONST_BATCH_SIZE = 32 
+# The batch sizes can vary depending on the computation power of your computer
+dataset_limit = 30000  # Limit for dataset sizes
+```
+Depending on the capability of your computer these numbers can be increased and decreased accordingly. If you find your computer often crashing, reducing the batch size and the dataset limit may solve the issue.
 ## Finding the right Dataset
 Finding the right dataset is crucial to the overall success of the project. Optimistically, you want to have ~250,000 individual conversations at the very least to attain a somewhat realistic deep learning chatbot. I suggest using the dataset I used [reddit data](https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/). Around 1.5 TB is needed for the data and the databases which filter through the data. 
+
 
 ### Filtering the data into a database
 Given you have a dataset filled with original topics / starting messages and one to many replies to these topics, we have to first sort through this dataset and link pairs of these original topics and replies together in a SQlite database. In addition to this, we will also do some inital filteration, such as removing hyperlinks, certain words, length limites etc...
@@ -67,4 +85,6 @@ Futhermore, if you're using my dataset, each month of data will be seperated out
 Once the data has been inserted into the database we need to look for all the pairs of conversations in the database and seperate them into different files. Where .original depicts the start comment / message and .reply depicts the associated reply to that original message:
 
 ![training data example](https://media.discordapp.net/attachments/715926471159578667/883648572480966706/unknown.png "training data example")
+
+## Filteration options
 
