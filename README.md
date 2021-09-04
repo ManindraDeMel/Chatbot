@@ -58,6 +58,7 @@ CONST_BATCH_SIZE = 32
 dataset_limit = 30000  # Limit for dataset sizes
 ```
 Depending on the capability of your computer these numbers can be increased and decreased accordingly. If you find your computer often crashing, reducing the batch size and the dataset limit may solve the issue.
+
 ## Finding the right Dataset
 Finding the right dataset is crucial to the overall success of the project. Optimistically, you want to have ~250,000 individual conversations at the very least to attain a somewhat realistic deep learning chatbot. I suggest using the dataset I used [reddit data](https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/). Around 1.5 TB is needed for the data and the databases which filter through the data. 
 
@@ -65,7 +66,7 @@ Finding the right dataset is crucial to the overall success of the project. Opti
 ### Filtering the data into a database
 Given you have a dataset filled with original topics / starting messages and one to many replies to these topics, we have to first sort through this dataset and link pairs of these original topics and replies together in a SQlite database. In addition to this, we will also do some inital filteration, such as removing hyperlinks, certain words, length limites etc...
 
-This purpose is fufilled in the gen_database.py file found at Database/gen_database.py. The creates a database for in my instance, the [reddit data](https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/) i'm using to train my chatbot. The database sorts through all this data and pairs comments with other comments which can then be used for training the chatbot. 
+This purpose is fufilled in the gen_database.py file found at database/gen_database.py. The creates a database for in my instance, the [reddit data](https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/) i'm using to train my chatbot. The database sorts through all this data and pairs comments with other comments which can then be used for training the chatbot. 
 
 After completion you should have a database with a structure similar to:
 
@@ -79,9 +80,34 @@ Futhermore, if you're using my dataset, each month of data will be seperated out
 ![Database filled example](https://cdn.discordapp.com/attachments/715926471159578667/883666219885023282/unknown.png "Filled Database")
 
 ### Pairing the data into different files
-Once the data has been inserted into the database we need to look for all the pairs of conversations in the database and seperate them into different files. Where .original depicts the start comment / message and .reply depicts the associated reply to that original message:
+Once the data has been inserted into the database we need to look for all the pairs of conversations in the database and seperate them into different files. Where .original depicts the start comment / message and .reply depicts the associated reply to that original message. This is done by the get_training_data.py file which reads all the provided databases and splits it into a small portion of test_data for after training and the rest of the filtered data is added towards the training_data files:
 
 ![training data example](https://media.discordapp.net/attachments/715926471159578667/883648572480966706/unknown.png "training data example")
 
-## Filteration options
 
+## Training data parameters
+Since filtertion is completed in the database insertion, parameters to this filteration can be deducted or added.
+
+In gen_database.py the filters for each sentence can be found in the following method:
+```python
+    @staticmethod
+    def filter_comment(comment):  # Could add filteration for sub-reddits. 
+        if (len(comment.split()) > 50) or (len(comment) < 1):
+            return False
+        elif (len(comment) > 1000):
+            return False
+        possible_url = re.search("(?P<url>https?://[^\s]+)",comment) # checking for URLS
+        if (possible_url):
+            return False
+        elif (comment == "[deleted]") or (comment == "[removed]"):
+            return False
+        return True
+```
+Currently the database filters out URL's and makes sure the message length is appropiate and exists. 
+
+Similarly in the get_training_data.py file also has path parameters that need to be addressed
+```python
+header = r'D:/Data/ChatBot/database/'
+Extract_data(10000, [header + r'2015-01.db', header + r'2015-02.db']).sort_data()
+```
+The header is the directory of all the databases the generator file has created. Futhermore, the second parameter of the Extract data class will need to be modified depending on the amount of databases created. I will most likely optimize this in a future update so python simply reads the filenames in tthe header directory with the extension of .db. 
