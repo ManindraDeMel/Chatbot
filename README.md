@@ -7,9 +7,7 @@ https://kalichatbotblog.000webhostapp.com/
 - pandas
 - sklearn
 - [Cuda](https://www.youtube.com/watch?v=cL05xtTocmY) (Recommended but optional)
-## Finding the right Dataset
-Finding the right dataset is crucial to the overall success of the project. Optimistically, you want to have ~250,000 individual conversations at the very least to attain a somewhat realistic deep learning chatbot. I suggest using the dataset I used [reddit data](https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/). Around 1.5 TB is needed for the data and the databases which filter through the data. 
-
+- 
 # Understanding the concepts behind the Chatbot
 This deep leanring chatbot utilizes Neural Machine translation (NMT), Long-short term memory units which make up the network and the addition of the attention layer to pick out important words in a given sentence. The model first encodes the input into comprehensible numerical values for the network, once passed through the network it is then passed to the attention layer and finally to the decoder which returns the chatbot's english reply. 
 
@@ -35,12 +33,16 @@ The conversation will now be displayed in the console similar to the desktop app
 
 Ending the program will just require you to close the console, or if you want, some extra functionality can be added to the given code to exit upon a button press, user input (such as 'exit') or anything similar
 
+
 ### Training the Chatbot
 Training the chatbot, is provided with the train.py file found in the user directory. In the console debugging logs will appear similar to:
 
 ![training example](https://media.discordapp.net/attachments/715926471159578667/883648362509910016/unknown.png "training debug example")
 
 The loss represents the accuracy of the network, whilst the epochs and batches represent the different portions of the data the chatbot is being trained on. 
+
+## Finding the right Dataset
+Finding the right dataset is crucial to the overall success of the project. Optimistically, you want to have ~250,000 individual conversations at the very least to attain a somewhat realistic deep learning chatbot. I suggest using the dataset I used [reddit data](https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/). Around 1.5 TB is needed for the data and the databases which filter through the data. 
 
 ### Filtering the data into a database
 Given you have a dataset filled with original topics / starting messages and one to many replies to these topics, we have to first sort through this dataset and link pairs of these original topics and replies together in a SQlite database. In addition to this, we will also do some inital filteration, such as removing hyperlinks, certain words, length limites etc...
