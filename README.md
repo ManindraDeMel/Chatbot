@@ -65,11 +65,8 @@ Finding the right dataset is crucial to the overall success of the project. Opti
 ### Filtering the data into a database
 Given you have a dataset filled with original topics / starting messages and one to many replies to these topics, we have to first sort through this dataset and link pairs of these original topics and replies together in a SQlite database. In addition to this, we will also do some inital filteration, such as removing hyperlinks, certain words, length limites etc...
 
-This purpose is fufilled in the Database.py file found at Database/database.py. The creates a database for in my instance, [reddit data](https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/). Which sorts through all this data and pairs comments with other comments which can then be used for training the chatbot. Therefore, if you are using the same [data](https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/) as me you can simply run
-```cmd
-python Database/database.py
-```
-Or you can run then file your IDE directly, either medium works. 
+This purpose is fufilled in the gen_database.py file found at Database/gen_database.py. The creates a database for in my instance, the [reddit data](https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/) i'm using to train my chatbot. The database sorts through all this data and pairs comments with other comments which can then be used for training the chatbot. 
+
 After completion you should have a database with a structure similar to:
 
 ![Database structured example](https://media.discordapp.net/attachments/715926471159578667/883648685819437057/unknown.png "Database example")
