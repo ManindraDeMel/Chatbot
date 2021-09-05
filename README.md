@@ -3,15 +3,15 @@ https://kalichatbotblog.000webhostapp.com/
 ##### Python 3.9 (other versions not tested)
 If you do not know how to use git LFS to clone large files please download the repo at the following google drive link: https://drive.google.com/drive/folders/1D9cnckHW95dYht2fonaEM20V8JEkAXgK?usp=sharing
 ### External Modules used
-- tensorflow 
+- tensorflow 2.6.0
 ```shell
 py -3.9 -m pip install tensorflow
 ```
-- tensorflow_addons
+- tensorflow_addons 0.14.0
 ```shell
 py -3.9 -m pip install tensorflow_addons
 ```
-- pandas
+- pandas 1.1.4
 ```shell
 py -3.9 -m pip install pandas
 ```
