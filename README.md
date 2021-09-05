@@ -22,7 +22,7 @@ py -3.9 -m pip install sklearn
 - [Cuda](https://www.youtube.com/watch?v=cL05xtTocmY) (Recommended but optional)
 
 # Understanding the concepts behind the Chatbot
-This deep leanring chatbot utilizes Neural Machine translation (NMT), Long-short term memory units which make up the network and the addition of the attention layer to pick out important words in a given sentence. The model first encodes the input into comprehensible numerical values for the network, once passed through the network it is then passed to the attention layer and finally to the decoder which returns the chatbot's english reply. 
+This deep learning chatbot utilizes Neural Machine translation (NMT), Long-short term memory units which make up the network and the addition of the attention layer to pick out important words in a given sentence. The model first encodes the input into comprehensible numerical values for the network, once passed through the network it is then passed to the attention layer and finally to the decoder which returns the chatbot's english reply. 
 
 ### Running the Chatbot via Desktop Application
 
@@ -30,7 +30,7 @@ This deep leanring chatbot utilizes Neural Machine translation (NMT), Long-short
 py -3.9 run.py
 ```
 
-The provided run.py file in the root directory of the project utilizses tkinter to create a basic GUI for you to interact with the chatbot. Once the file is run a tkinter application should open:
+The provided run.py file in the root directory of the project utilizes tkinter to create a basic GUI for you to interact with the chatbot. Once the file is run a tkinter application should open:
 
 ![interaction image](https://cdn.discordapp.com/attachments/715926471159578667/883694859247054929/unknown.png "tkinter example")
 
@@ -46,7 +46,7 @@ while True:
     user_input = input("> ")
     print(chatbot.reply(u"{}".format(user_input)))
 ```
-The conversation will now be displayed in the console similar to the desktop application. Additionally feel free to experiement with extensions or add more functionality to the console application however you like.
+The conversation will now be displayed in the console similar to the desktop application. Additionally feel free to experiment with extensions or add more functionality to the console application however you like.
 
 ![console example image](https://media.discordapp.net/attachments/715926471159578667/883697980899741697/unknown.png "console example")
 
@@ -82,9 +82,9 @@ Finding the right dataset is crucial to the overall success of the project. Opti
 
 
 ### Filtering the data into a database
-Given you have a dataset filled with original topics / starting messages and one to many replies to these topics, we have to first sort through this dataset and link pairs of these original topics and replies together in a SQlite database. In addition to this, we will also do some inital filteration, such as removing hyperlinks, certain words, length limites etc...
+Given you have a dataset filled with original topics / starting messages and one to many replies to these topics, we have to first sort through this dataset and link pairs of these original topics and replies together in a SQlite database. In addition to this, we will also do some initial filtration, such as removing hyperlinks, certain words, sentence length limits etc...
 
-This purpose is fufilled in the gen_database.py file found at database/gen_database.py. The creates a database for in my instance, the [reddit data](https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/) i'm using to train my chatbot. The database sorts through all this data and pairs comments with other comments which can then be used for training the chatbot. 
+This purpose is fulfilled in the gen_database.py file found at database/gen_database.py. The creates a database for in my instance, the [reddit data](https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/) i'm using to train my chatbot. The database sorts through all this data and pairs comments with other comments which can then be used for training the chatbot. 
 
 After completion you should have a database with a structure similar to:
 
@@ -94,22 +94,22 @@ Filled with data that should look like:
 
 ![Database filled example](https://media.discordapp.net/attachments/715926471159578667/883648921447043072/unknown.png "Filled Database")
 
-Futhermore, if you're using my dataset, each month of data will be seperated out into seperate databases as depicted:
+Futhermore, if you're using my dataset, each month of data will be separated out into separate databases as depicted:
 ![Database filled example](https://cdn.discordapp.com/attachments/715926471159578667/883666219885023282/unknown.png "Filled Database")
 
 ### Pairing the data into different files
-Once the data has been inserted into the database we need to look for all the pairs of conversations in the database and seperate them into different files. Where .original depicts the start comment / message and .reply depicts the associated reply to that original message. This is done by the get_training_data.py file which reads all the provided databases and splits it into a small portion of test_data for after training and the rest of the filtered data is added towards the training_data files:
+Once the data has been inserted into the database we need to look for all the pairs of conversations in the database and separate them into different files. Where .original depicts the start comment / message and .reply depicts the associated reply to that original message. This is done by the get_training_data.py file which reads all the provided databases and splits it into a small portion of test_data for after training and the rest of the filtered data is added towards the training_data files:
 
 ![training data example](https://media.discordapp.net/attachments/715926471159578667/883648572480966706/unknown.png "training data example")
 
 
 ## Training data parameters
-Since filtertion is completed in the database insertion, parameters to this filteration can be deducted or added.
+Since filtration is completed in the database insertion, parameters to this filtration can be deducted or added.
 
 In gen_database.py the filters for each sentence can be found in the following method:
 ```python
     @staticmethod
-    def filter_comment(comment):  # Could add filteration for sub-reddits. 
+    def filter_comment(comment):  # Could add filtration for sub-reddit's. 
         if (len(comment.split()) > 50) or (len(comment) < 1):
             return False
         elif (len(comment) > 1000):
@@ -121,11 +121,11 @@ In gen_database.py the filters for each sentence can be found in the following m
             return False
         return True
 ```
-Currently the database filters out URL's and makes sure the message length is appropiate and exists. 
+Currently the database filters out URL's and makes sure the message length is appropriate and exists. 
 
 Similarly in the get_training_data.py file also has path parameters that need to be addressed
 ```python
 header = r'D:/Data/ChatBot/database/'
 Extract_data(10000, [header + r'2015-01.db', header + r'2015-02.db']).sort_data()
 ```
-The header is the directory of all the databases the generator file has created. Futhermore, the second parameter of the Extract data class will need to be modified depending on the amount of databases created. I will most likely optimize this in a future update so python simply reads the filenames in tthe header directory with the extension of .db. 
+The header is the directory of all the databases the generator file has created. Futhermore, the second parameter of the Extract data class will need to be modified depending on the amount of databases created. I will most likely optimize this in a future update so python simply reads the filenames in the header directory with the extension of .db. 
