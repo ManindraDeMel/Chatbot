@@ -4,12 +4,21 @@ https://kalichatbotblog.000webhostapp.com/
 If you do not know how to use git LFS to clone large files please download the repo at the following google drive link: https://drive.google.com/drive/folders/1D9cnckHW95dYht2fonaEM20V8JEkAXgK?usp=sharing
 ### External Modules used
 - tensorflow 
-```cmd
+```shell
 py -3.9 -m install tensorflow
 ```
 - tensorflow_addons
+```shell
+py -3.9 -m install tensorflow_addons
+```
 - pandas
+```shell
+py -3.9 -m install pandas
+```
 - sklearn
+```shell
+py -3.9 -m install sklearn
+```
 - [Cuda](https://www.youtube.com/watch?v=cL05xtTocmY) (Recommended but optional)
 
 # Understanding the concepts behind the Chatbot
