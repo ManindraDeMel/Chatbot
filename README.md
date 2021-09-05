@@ -5,19 +5,19 @@ If you do not know how to use git LFS to clone large files please download the r
 ### External Modules used
 - tensorflow 
 ```shell
-py -3.9 -m install tensorflow
+py -3.9 -m pip install tensorflow
 ```
 - tensorflow_addons
 ```shell
-py -3.9 -m install tensorflow_addons
+py -3.9 -m pip install tensorflow_addons
 ```
 - pandas
 ```shell
-py -3.9 -m install pandas
+py -3.9 -m pip install pandas
 ```
 - sklearn
 ```shell
-py -3.9 -m install sklearn
+py -3.9 -m pip install sklearn
 ```
 - [Cuda](https://www.youtube.com/watch?v=cL05xtTocmY) (Recommended but optional)
 
