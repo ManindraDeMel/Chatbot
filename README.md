@@ -1,6 +1,7 @@
 # Kali the deep learning chatbot
 https://kalichatbotblog.000webhostapp.com/
 ##### Python 3.9
+If you do not know how to use git LFS to clone large files please download the repo at the following google drive link: https://drive.google.com/drive/folders/1D9cnckHW95dYht2fonaEM20V8JEkAXgK?usp=sharing
 ### External Modules used
 - tensorflow
 - tensorflow_addons
