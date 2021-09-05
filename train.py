@@ -14,7 +14,7 @@ print("\n################# Training begun #################\n")
 for epoch in range(CONST_EPOCHS):
     start_time = time.time()
     hidden_layer = encoder.initialize_hidden_layers() # Initialize the encoder 
-    total_loss = 0 # initalize the intial error/loss for the network
+    total_loss = 0 # initialize the initial error/loss for the network
     for (batch, (original_comment, reply)) in enumerate(train_dataset.take(num_batches)):
         batch_loss = train(original_comment, reply, hidden_layer) # Train on the batch
         total_loss += batch_loss # Update the total loss with each batchs' loss 
