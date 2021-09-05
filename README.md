@@ -25,6 +25,11 @@ py -3.9 -m pip install sklearn
 This deep leanring chatbot utilizes Neural Machine translation (NMT), Long-short term memory units which make up the network and the addition of the attention layer to pick out important words in a given sentence. The model first encodes the input into comprehensible numerical values for the network, once passed through the network it is then passed to the attention layer and finally to the decoder which returns the chatbot's english reply. 
 
 ### Running the Chatbot via Desktop Application
+
+```shell
+py -3.9 run.py
+```
+
 The provided run.py file in the root directory of the project utilizses tkinter to create a basic GUI for you to interact with the chatbot. Once the file is run a tkinter application should open:
 
 ![interaction image](https://cdn.discordapp.com/attachments/715926471159578667/883694859247054929/unknown.png "tkinter example")
