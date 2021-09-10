@@ -6,7 +6,7 @@ import unicodedata
 import re
 from sklearn.model_selection import train_test_split
 import io
-
+from tensorboard.plugins import projector
 """
 This file contains the entire model for my project. It involves the preperation of the data, the encoder, the decoder,
 the training process, and the definition of the loss function which calculates the total error of each iteration. There are 
