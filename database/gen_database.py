@@ -1,7 +1,7 @@
 import sqlite3
 import json
 import re
-
+import os
 """
 The entire purpose of this file is to read the reddit data and compile it to a series of databases with respect to the reddit data's year. 
 We add each row of the reddit data given the pass certain parameters (no hyperlinks, certain length etc... ). Once this data has been validated its then checked if it is
@@ -100,31 +100,42 @@ class DataBase:
             return False
         return True
 
-for file_index in range(1, 3): # range(1, 3) since there are two files used right now: 2015-0{1} and 2015-0{2}
-    file_name = f"2015-0{file_index}"
-    year = file_name.split("-")[0]
-    database = DataBase(f"database/{file_name}.db")
-    database.initiate_table()
-    print(f"##############\nWorking on database {file_name}\n##############")
-    with open(f"D:/Data/reddit_data/{year}/RC_{file_name}", buffering=1500) as f:
-        for row in f:
-            row = json.loads(row)
-            original_id = row['parent_id']     
-            date_created = row['created_utc']
-            comment_id = row['name']
-            upvotes = row['score']
-            subreddit = row['subreddit']
-            #############
-            text = DataBase.format_data(row['body'])
-            original_comment = database.find_original_comment(original_id)
-            #############
-            if upvotes >= 3:
-                if DataBase.filter_comment(text):
-                    current_comment_score = database.find_upvotes(original_id)
-                    if current_comment_score:
-                        if upvotes > current_comment_score:
-                            database.replace_row(comment_id, original_id, text, subreddit, date_created, upvotes, original_comment)
-                    else:
-                        database.insert_into_database(comment_id, original_id, text, subreddit, date_created, upvotes, original_comment)
+directories = list(map(lambda x: str(x), range(2007, 2016)))
 
-            database.find_status(100000)
+for directory in directories:
+    try:
+        os.mkdir(f"database/{directory}")
+    except:
+        pass
+    data_files = os.listdir(f"R:/Chatbot_program/reddit_data/{directory}")
+    for file_name in data_files:
+        if ".bz" not in file_name:
+            file_name = file_name.split("RC_")[1]
+            year = file_name.split("-")[0]
+            database = DataBase(f"database/{directory}/{file_name}.db")
+            database.initiate_table()
+            # 
+            print(f"##############\nWorking on database {file_name}\n##############")
+            # 
+            with open(f"R:/Chatbot_program/reddit_data/{year}/RC_{file_name}", buffering=1500) as f:
+                for row in f:
+                    row = json.loads(row)
+                    original_id = row['parent_id']     
+                    date_created = row['created_utc']
+                    comment_id = row['name']
+                    upvotes = row['score']
+                    subreddit = row['subreddit']
+                    #############
+                    text = DataBase.format_data(row['body'])
+                    original_comment = database.find_original_comment(original_id)
+                    #############
+                    if upvotes >= 3:
+                        if DataBase.filter_comment(text):
+                            current_comment_score = database.find_upvotes(original_id)
+                            if current_comment_score:
+                                if upvotes > current_comment_score:
+                                    database.replace_row(comment_id, original_id, text, subreddit, date_created, upvotes, original_comment)
+                            else:
+                                database.insert_into_database(comment_id, original_id, text, subreddit, date_created, upvotes, original_comment)
+
+                    database.find_status(100000)
