@@ -1,28 +1,39 @@
 import sqlite3
 import pandas as p
+import os
 
 class Extract_data:
-    def __init__(self, rows_to_be_pulled, file_names):
+    def __init__(self, rows_to_be_pulled, file_names, path):
         self.limit = rows_to_be_pulled
         self.last_time = 0
         self.returned_rows = self.limit
         self.counter = 0
         self.test_append = False
         self.file_names = file_names
-    
-    def write_file(self, fileName, fileName2):
-        with open(fileName, "a", encoding="utf8") as f:
+        self.db_connection = None
+        self.training_directory = path
+
+    def write_file(self, fileName, fileName2):        
+        with open(f"{self.training_directory}/{fileName}", "a", encoding="utf8") as f:
             for content in self.df["original_comment_text"].values:
                 if content:
-                    f.write(content+"\n")
-        with open(fileName2, "a", encoding="utf8") as f:
+                    f.write(content.strip()+"\n")
+        with open(f"{self.training_directory}/{fileName2}", "a", encoding="utf8") as f:
             for content in self.df["reply_text"].values:
                 if content:
-                    f.write(content+"\n")
+                    f.write(content.strip()+"\n")
     
+
     def sort_data(self): # Will most likely have different db's for different time periods
         for db_name in self.file_names:
+            print(f"#############\n Working on DB {db_name}\n#############")
             self.db_connection = sqlite3.connect(db_name)
+            #####
+            self.last_time = 0
+            self.returned_rows = self.limit
+            self.counter = 0
+            self.test_append = False
+            #####
             while self.returned_rows == self.limit: # If we have less rows then we break out because it means we have reached the end of the database
                 query = f"SELECT * FROM conversations WHERE unix_time > {self.last_time} AND original_comment_text NOT NULL ORDER BY unix_time ASC LIMIT {self.limit}" # Order by unix time, and only return a limited amount of rows, we also make sure its pairs of rows. i.e (original comment and a reply)
                 self.df = p.read_sql(query, self.db_connection)
@@ -36,7 +47,11 @@ class Extract_data:
                 self.counter += 1
                 if (self.counter % 10 == 0):
                     print(self.counter * self.limit, "rows completed so far")
+            self.db_connection.close()
                     
-header = r'D:/Data/ChatBot/database/'
-Extract_data(10000, [header + r'2015-01.db', header + r'2015-02.db']).sort_data()
+path_to_databases = 'R:/Chatbot_program/ChatBot/database'
+years = list(map(lambda x:  str(x), range(2007, 2015)))
+files = [r"{}/{}/{}".format(path_to_databases, year, file_name) for year in years for file_name in os.listdir(f"{path_to_databases}/{year}")]
+Extract_data(10000, files, "training_data/").sort_data()
+
 

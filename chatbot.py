@@ -1,12 +1,13 @@
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # Stop annoying tensorflow information debug logs
+#os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # Stop annoying tensorflow information debug logs
 import tensorflow as tf
 import tensorflow_addons as tfa
 import unicodedata
 import re
 from sklearn.model_selection import train_test_split
 import io
-from tensorboard.plugins import projector
+import json, pickle
+
 """
 This file contains the entire model for my project. It involves the preperation of the data, the encoder, the decoder,
 the training process, and the definition of the loss function which calculates the total error of each iteration. There are 
@@ -30,8 +31,6 @@ holds the attention and again, as the name suggests, it decodes the numerical ou
 
 CONST_TRAINING_CHECKPOINT_DIRECTORY = "training_checkpoints/"
 CONST_TRAINING_FILES_DIRECTORIES = ("training_data/training_data.original", "training_data/training_data.reply")
-
-
 """
 Format_dataset clarifies and formats the user input and the training and test data. 
 """
@@ -49,14 +48,15 @@ class Format_dataset:
         return sentence
 
     @staticmethod
-    def read_data(original_path, reply_path, limit) -> list:
+    def read_data(original_path, reply_path, limit) -> list:        
         original_lines = io.open(original_path, encoding='UTF-8').read().strip().split("\n") # Reading from each of the files
         reply_lines = io.open(reply_path, encoding='UTF-8').read().strip().split("\n")
         #############
-        if (len(original_lines) != len(reply_lines)):
-            raise ValueError("training data is not the same length")
-        #############
-        sentence_pairs = [[Format_dataset.format_sentence(original_lines[l]), Format_dataset.format_sentence(reply_lines[l])] for l in range(len(original_lines[:limit]))]
+        if (len(original_lines) <= len(reply_lines)):
+            sentence_pairs = [[Format_dataset.format_sentence(original_lines[l]), Format_dataset.format_sentence(reply_lines[l])] for l in range(len(original_lines[:limit]))]
+        else:
+            sentence_pairs = [[Format_dataset.format_sentence(original_lines[l]), Format_dataset.format_sentence(reply_lines[l])] for l in range(len(reply_lines[:limit]))]
+        #############        
         return zip(*sentence_pairs)
 
     @staticmethod # basically, here we're assinging tokens to specific words. 
@@ -102,7 +102,7 @@ class Format_dataset:
 The encoder object is responsible for both turning the training data; words, into numbers that the network can parse.
 """
 class Encoder(tf.keras.Model):
-    def __init__(self, batch_size, input_layer_shape, chatbot_memory_size, units):
+    def __init__(self, batch_size, input_layer_shape, chatbot_memory_size, units):        
         super(Encoder, self).__init__()
         self.batch_size = batch_size
         self.units = units # The amount of units/lstm's in the network
@@ -122,7 +122,7 @@ The decoder, similar to the encoder converts one instance to another. In this ca
 into words, punctuations etc... 
 """
 class Decoder(tf.keras.Model):
-    def __init__(self, batch_size, input_layer_dim, memory_size, units, attention_type='luong') -> None:
+    def __init__(self, batch_size, input_layer_dim, memory_size, units, attention_type='luong') -> None:        
         super(Decoder, self).__init__()
         self.batch_size = batch_size # each batch size
         self.units = units # The amount of units/lstm's in the network
@@ -196,6 +196,7 @@ def loss(real_replies, network_output):
     loss = tf.reduce_mean(tf.cast(tf.logical_not(tf.math.equal(real_replies, 0)), dtype=loss.dtype) * loss)
     return loss
 
+# This code is used for the training process, It'll just be cleaner placed here.
 
 # Setting up the network
 CONST_BUFFER_SIZE = 32000 # limits how much we read from the IO/Stream. We wouldn't want a buffer overflow...
@@ -204,21 +205,22 @@ dataset_limit = 30000  # Limit for dataset sizes
 ####################
 #################### Start formatting the data
 ####################
+print("#############\n Reading The Training Data\n############# (~ 5 minutes)")
 dataset_creator = Format_dataset() 
 train_dataset, val_dataset, original_data_list, reply_data_list = dataset_creator.call(dataset_limit, CONST_BUFFER_SIZE, CONST_BATCH_SIZE)
 
 original_message_batch, reply_batch = next(iter(train_dataset))
+
 # Setting up the dimensions/shapes for the initial chatbot network. 
 chatbot_memory_original_size = len(original_data_list.word_index)+1 # This is the chatbot's dictionary, for all the words its learnt and tokenized
 chatbot_memory_reply_size = len(reply_data_list.word_index) + 1
 max_length_input = original_message_batch.shape[1]
 max_length_output = reply_batch.shape[1]
 num_batches = dataset_limit//CONST_BATCH_SIZE # dividing the set into smaller epochs
-
 ####################
 #################### Initialize the encoder
 ####################
-
+print("\n#############\n Setting up Encoder\n#############")
 encoder = Encoder(CONST_BATCH_SIZE, 256, chatbot_memory_original_size, 1024)
 random_hidden = encoder.initialize_hidden_layers()  # test input, to create the encoder layer sizes. 
 random_output, hidden_layer_example, current_sample = encoder(original_message_batch, random_hidden)
@@ -226,17 +228,21 @@ random_output, hidden_layer_example, current_sample = encoder(original_message_b
 ####################
 #################### Initialize the decoder
 ####################
-
+print("\n#############\n Setting up Decoder\n#############")
 decoder = Decoder(CONST_BATCH_SIZE, 256, chatbot_memory_reply_size, 1024)
 random_batch = tf.random.uniform((CONST_BATCH_SIZE, max_length_output))
+print("\n#############\n Setting up the Attention Mechanism\n#############")
 decoder.attention_layer.setup_memory(random_output) # Setting up attention layer
 initial_state = decoder.init_network(CONST_BATCH_SIZE, [hidden_layer_example, current_sample], tf.float32)
 decoder(random_batch, initial_state)
 
 # This is an optimizer, it includes relevant information for NMT and deep learning chatbots
 # Since it has this context opf what type of network we're training, it improves the speed of the program. 
+print("\n#############\n Integrating the optimizer\n#############")
 optimizer = tf.keras.optimizers.Adam() 
 
 # Parameters used for training and saving the state of the network. 
+print("\n#############\n Setting up for Training\n#############")
 state_path = os.path.join(CONST_TRAINING_CHECKPOINT_DIRECTORY, "ckpt")
 current_state = tf.train.Checkpoint(optimizer=optimizer, encoder=encoder, decoder=decoder)
+print("\n#############\n Chatbot Loaded!\n#############")

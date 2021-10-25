@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+
+    <!--Page Title-->
+    <title>Kali</title>
+    <link rel="shortcut icon" href="/static/images/favicon.ico" title="Favicon" />
+    <!--Meta Keywords and Description-->
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <link href="/static/stylesheets/chat.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/static/stylesheets/font-awesome.min.css">
+    <script src="/static/js/jquery.1.8.3.min.js"></script>
+    <script src="https://cdn.socket.io/4.2.0/socket.io.min.js" integrity="sha384-PiBR5S00EtOj2Lto9Uu81cmoyZqR57XcOna1oAuVuIEjzj0wpqDVfD0JA9eXlRsj" crossorigin="anonymous"></script>
+    <!--Google Webfonts-->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+  </head>
+  <body>
+    <!--Main Navigation-->
+    <header id="banner" class="scrollto clearfix" data-enllax-ratio=".5">
+      <nav id="nav-main">
+        <ul>
+          <li>
+            <a title="Home"
+            href="/">
+            <i class="fa fa-home fa-2x"></i><span></span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+  </header>
+    <!--End of Main Navigation-->
+    <section class="msger">
+      <header class="msger-header">
+        <div class="msger-header-title">
+          <i class="fas fa-comment-alt"></i> Kali: A deep learning chatbot
+        </div>
+      </header>
+
+      <main class="msger-chat">
+      </main>
+
+      <form class="msger-inputarea">
+        <input type="text" class="msger-input" placeholder="Enter your message..." id="inputBox">
+        <button type="submit" class="msger-send-btn">Send</button>
+      </form>
+    </section>
+  </body>
+  <script src="/static/js/chat.js"></script>
+</html>
