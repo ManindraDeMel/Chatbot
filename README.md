@@ -11,16 +11,29 @@ py -3.9 -m pip install tensorflow
 ```shell
 py -3.9 -m pip install tensorflow_addons
 ```
-- pandas 1.1.4
+- sklearn
+```shell
+py -3.9 -m pip install scikit_learn
+```
+- pandas
 ```shell
 py -3.9 -m pip install pandas
 ```
-- sklearn
+- tensforflow GPU
 ```shell
-py -3.9 -m pip install sklearn
+py -3.9 -m pip install tensorflow_gpu (optional)
 ```
 - [Cuda](https://www.youtube.com/watch?v=cL05xtTocmY) (Recommended but optional)
 
+### Website modules
+Flask
+```shell
+py -3.9 -m pip install flask (optional)
+```
+flask socketio
+```shell
+py -3.9 -m pip install flask-socketio (optional)
+```
 # Understanding the concepts behind the Chatbot
 This deep learning chatbot utilizes Neural Machine translation (NMT), Long-short term memory units which make up the network and the addition of the attention layer to pick out important words in a given sentence. The model first encodes the input into comprehensible numerical values for the network, once passed through the network it is then passed to the attention layer and finally to the decoder which returns the chatbot's english reply. 
 
