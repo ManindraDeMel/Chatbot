@@ -136,5 +136,3 @@ header = r'D:/Data/ChatBot/database/'
 Extract_data(10000, [header + r'2015-01.db', header + r'2015-02.db']).sort_data()
 ```
 The header is the directory of all the databases the generator file has created. Futhermore, the second parameter of the Extract data class will need to be modified depending on the amount of databases created. I will most likely optimize this in a future update so python simply reads the filenames in the header directory with the extension of .db. 
-
-If problem a problem arised while using the program, try consulting the video tutorial I created: https://drive.google.com/file/d/1Mf_dMQAJh6jdlNv-XV22fG4WH2872_ZR/view?usp=sharing
