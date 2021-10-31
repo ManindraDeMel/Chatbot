@@ -2,6 +2,13 @@ import sqlite3
 import pandas as p
 import os
 
+"""
+In this file, we're reading through all the databases, filtering out some more unwanted data and then writing this data in both training and testing files. The training
+files are used for training and consist of training_data.original (TO) and training_data.reply (TR). TO is used as a input for the chatbot during training, whilst TR is used to evaluate
+the cost function for the model and hence train the model. The testing data, is used after training to evaluate the effectvieness of the training session, and is data that is unique to the training
+data. 
+"""
+
 class Extract_data:
     def __init__(self, rows_to_be_pulled, file_names, path):
         self.limit = rows_to_be_pulled

@@ -6,7 +6,6 @@ import unicodedata
 import re
 from sklearn.model_selection import train_test_split
 import io
-import json, pickle
 
 """
 This file contains the entire model for my project. It involves the preperation of the data, the encoder, the decoder,
@@ -85,7 +84,7 @@ class Format_dataset:
         return original_tensor, reply_tensor, original_tokenizer, reply_tokenizer
 
 
-    def call(self, dataset_limit, BUFFER_SIZE, batch_size): # This is what is returned upon defining the class
+    def call(self, dataset_limit, BUFFER_SIZE, batch_size): # This is what is returned upon defining the class. I.E this methods utilizes the other private methods to return an overall output
         original_file, reply_file = CONST_TRAINING_FILES_DIRECTORIES
         original_tensor, reply_tensor, self.original_tokenizer, self.reply_tokenizer = Format_dataset.load_dataset(original_file, reply_file, dataset_limit)
         ######################## Split arrays or matrices into random train and test subsets

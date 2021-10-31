@@ -1,4 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+/* 
+The following CSS was to modify specfic aspects of the front-end the other libraries didn't address in my chat.html file. 
+
+1. Handling the general page
+2. Formatting the chatbox
+3. Formatting the navigation menu (the single home icon)
+*/
+
+/*------------------------------------------------------------------------------------------*/
+/* 1. Handling the general page */
+/*------------------------------------------------------------------------------------------*/
 :root {
     --body-bg: linear-gradient(to bottom right, white, grey 100%);
     --msger-bg: #fff;
@@ -27,7 +38,9 @@
     background-image: var(--body-bg);
     font-family: Helvetica, sans-serif;
   }
-  
+/*------------------------------------------------------------------------------------------*/
+/* 2. Formatting the chatbox */
+/*------------------------------------------------------------------------------------------*/
   .msger {
     display: flex;
     flex-flow: column wrap;
@@ -151,6 +164,9 @@
     background-color: #fcfcfe;
   }
 
+/*------------------------------------------------------------------------------------------*/
+/* 3. Formatting the navigation menu (the single home icon) */
+/*------------------------------------------------------------------------------------------*/
 #nav-main {
     position: absolute;
     top: 1vh;

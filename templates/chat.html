@@ -33,12 +33,14 @@
       </nav>
   </header>
     <!--End of Main Navigation-->
+    <!-- Below is the chat 'area' -->
     <section class="msger">
       <header class="msger-header">
         <div class="msger-header-title">
           <i class="fas fa-comment-alt"></i> Kali: A deep learning chatbot
         </div>
-      </header>
+      </header> <!-- When we are chatting the the chatbot, it dynamically adds the message as a html element, although not the best implementation (Mayebe a <ul> or a <li> would be better)
+        but it works and looks very pretty and aesthetic-->
 
       <main class="msger-chat">
       </main>
@@ -49,5 +51,5 @@
       </form>
     </section>
   </body>
-  <script src="/static/js/chat.js"></script>
+  <script src="/static/js/chat.js"></script> <!-- script used to communicate with the backend-->
 </html>
