@@ -37,27 +37,21 @@ py -3.9 -m pip install flask-socketio (optional)
 # Understanding the concepts behind the Chatbot
 This deep learning chatbot utilizes Neural Machine translation (NMT), Long-short term memory units which make up the network and the addition of the attention layer to pick out important words in a given sentence. The model first encodes the input into comprehensible numerical values for the network, once passed through the network it is then passed to the attention layer and finally to the decoder which returns the chatbot's english reply. 
 
-### Running the Chatbot via Desktop Application
-
-```shell
-py -3.9 run.py
+### Running the Chatbot via the website
+The website associated with the chatbot uses flask-socketio to communicate with the backend. To begin a local instance of the server simply run
+```bash
+python3.9 webserver.py
 ```
-
-The provided run.py file in the root directory of the project utilizes tkinter to create a basic GUI for you to interact with the chatbot. Once the file is run a tkinter application should open:
-
-![interaction image](https://cdn.discordapp.com/attachments/715926471159578667/883694859247054929/unknown.png "tkinter example")
-
-The application then acts somewhat like a generic messenger application with the message box at the bottom and the scrollable conversation updated and shown at the top.
-
+![website image 1](https://media.discordapp.net/attachments/904215241221627934/904215342694420521/sc16.jpg "website example")
+![website image 2](https://media.discordapp.net/attachments/904215241221627934/904215337636077598/sc18.jpg "console example")
+The UI is fairly intuitive and simply pressing the chat buttons redirects you to a webpage where the server establishes a websocket with your machine, which once completed 
+allows you to directly talk to the chatbot.
+![website image 3](https://media.discordapp.net/attachments/904215241221627934/904215336352616448/sc17.jpg "console example")
 ### Running the Chatbot via Console App
-As provided in the run_console.py file, running the chatbot in a console app is extremely easy. It's simply comprised of this code:
+As provided in the run_console.py file, running the chatbot in a console app is extremely easy.
 
-```python
-import pre_process as chatbot
-chatbot.restore_latest_state()
-while True:
-    user_input = input("> ")
-    print(chatbot.reply(u"{}".format(user_input)))
+```bash
+python3.9 run.py
 ```
 The conversation will now be displayed in the console similar to the desktop application. Additionally feel free to experiment with extensions or add more functionality to the console application however you like.
 
