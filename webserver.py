@@ -1,7 +1,6 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 from model import *
-
 """
 This is the webserver file, this is effectively the backend which handles all the users on the front end. It acts as a medium to communicate between the 
 user and the chatbot. Although this aspect of my project is not the focus, it's still a vital aspect for functionality and ease of use, a website also looks
@@ -10,7 +9,6 @@ specifically decided on using websocket's for its speed, which somewhat accounts
 a new technique of communcation I've learnt. 
 """
 # Initalizing the server
-Chatbot.restore_latest_state()
 async_mode = None
 chatbot_list = []
 app = Flask(__name__)
@@ -35,4 +33,5 @@ def handle_message(user_input):
     emit ("respond", {'data': response})
 
 if __name__ == "__main__":
-    socketio.run(app, host="0.0.0.0", port=9090, debug=True)
+    Chatbot.restore_latest_state()
+    socketio.run(app, host="0.0.0.0", port=5000)
