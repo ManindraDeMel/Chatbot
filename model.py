@@ -47,7 +47,6 @@ class Chatbot:
     @staticmethod
     def reply(sentence, dont_show_all_responses = True, show_score = False) -> None: # This functions wraps all the processing for the chatbot's reply and passes the user input to the model
         response = Chatbot.get_reply(sentence)
-        previous_messages = []
         if response:
             result, beam_scores = response
             if dont_show_all_responses: 
@@ -58,9 +57,7 @@ class Chatbot:
                     max_score = (1, beam_score[1])
                     for i in range(len(output)):
                         if (beam_score[i] > max_score[1]) and (output[i] != "") or (output != "\n") or (output != " "):
-                            if output[i] not in previous_messages:
-                                previous_messages.append(output[i])
-                                max_score = (i, beam_score[i])
+                            max_score = (i, beam_score[i])
                 if show_score: # If we want to show the associated score the chatbot assigned to it's response, we can view it by enabling show_score. 
                     return (f'{output[max_score[0]]}, score: {beam_score[max_score[0]]}\n')
                 return (f'{output[max_score[0]]}\n')

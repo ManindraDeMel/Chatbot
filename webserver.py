@@ -10,7 +10,6 @@ a new technique of communcation I've learnt.
 """
 # Initalizing the server
 async_mode = None
-chatbot_list = []
 app = Flask(__name__)
 app.secret_key = "sD+@@!89-+--_($&***#-"
 socketio = SocketIO(app, async_mode=async_mode)
@@ -33,5 +32,6 @@ def handle_message(user_input):
     emit ("respond", {'data': response})
 
 if __name__ == "__main__":
+    print("Once chatting with the chatbot, send 3 ~ 5 redundant messages just to establish the web socket connection to the chatbot (takes like 3 minutes to establish)")
     Chatbot.restore_latest_state()
     socketio.run(app, host="0.0.0.0", port=5000)
